@@ -1,4 +1,4 @@
-package com.example.calculatorapp;
+package com.example.customtoast;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
+
 
     Button clickMe;
 
@@ -27,18 +28,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                LayoutInflater inflater = getLayoutInflater();
+                LayoutInflater inflater =
+                        getLayoutInflater();
 
                 View layout = inflater.inflate(
                         R.layout.toast_layout,
                         null
                 );
 
-                TextView t1 = layout.findViewById(R.id.t1);
+                TextView t1 =
+                        layout.findViewById(R.id.t1);
 
                 t1.setText("Button Clicked!");
 
-                Toast toast = new Toast(getApplicationContext());
+                Toast toast =
+                        new Toast(getApplicationContext());
 
                 toast.setGravity(
                         Gravity.TOP,
@@ -46,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
                         200
                 );
 
-                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setDuration(
+                        Toast.LENGTH_LONG
+                );
 
                 toast.setView(layout);
 
@@ -54,4 +60,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
