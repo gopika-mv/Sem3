@@ -1,173 +1,71 @@
-package com.example.eventregistration;
+package com.example.pg07;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 public class SummaryActivity extends AppCompatActivity {
 
-    TextView summaryName;
-    TextView summaryEmail;
-    TextView summaryAddress;
-    TextView summaryCategory;
-    TextView summaryWorkshops;
-
-    Button backButton;
-    Button confirmButton;
+    TextView tvSummary;
+    Button btnBack, btnConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_summary);
 
-        summaryName = findViewById(R.id.summaryName);
-        summaryEmail = findViewById(R.id.summaryEmail);
-        summaryAddress = findViewById(R.id.summaryAddress);
-        summaryCategory = findViewById(R.id.summaryCategory);
-        summaryWorkshops = findViewById(R.id.summaryWorkshops);
-
-        backButton = findViewById(R.id.backButton);
-        confirmButton = findViewById(R.id.confirmButton);
-
-        SharedPreferences preferences =
-                getSharedPreferences(
-                        MainActivity.PREF_NAME,
-                        MODE_PRIVATE
-                );
-
-        String name = preferences.getString(
-                MainActivity.KEY_NAME,
-                ""
-        );
-
-        String email = preferences.getString(
-                MainActivity.KEY_EMAIL,
-                ""
-        );
-
-        String address = preferences.getString(
-                MainActivity.KEY_ADDRESS,
-                ""
-        );
-
-        String category = preferences.getString(
-                MainActivity.KEY_CATEGORY,
-                ""
-        );
-
-        String workshops = preferences.getString(
-                MainActivity.KEY_WORKSHOPS,
-                ""
-        );
-
-        summaryName.setText("Name: " + name);
-
-        summaryEmail.setText("Email: " + email);
-
-        summaryAddress.setText("Address: " + address);
-
-        summaryCategory.setText(
-                "Registration Category: " + category
-        );
-
-        summaryWorkshops.setText(
-                "Workshops: " + workshops
-        );
-
-        backButton.setOnClickListener(v -> {
-            finish();
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
         });
 
-        confirmButton.setOnClickListener(v -> {
-            showCustomToast();
+        tvSummary = findViewById(R.id.tvSummary);
+        btnBack = findViewById(R.id.btnBack);
+        btnConfirm = findViewById(R.id.btnConfirm);
+
+        // Fetch data from SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("UserData", MODE_PRIVATE);
+        String name = prefs.getString("NAME", "N/A");
+        String mail = prefs.getString("MAIL", "N/A");
+        String category = prefs.getString("CATEGORY", "N/A");
+        String interests = prefs.getString("INTERESTS", "N/A");
+
+        // Display data in TextView
+        String summaryText = "Name: " + name + "\n\n" +
+                "Mail: " + mail + "\n\n" +
+                "Category: " + category + "\n\n" +
+                "Interests: " + interests;
+
+        tvSummary.setText(summaryText);
+
+        // Back button action
+        btnBack.setOnClickListener(v -> finish());
+
+        // Confirm button action with custom toast
+        btnConfirm.setOnClickListener(v -> {
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast, findViewById(R.id.toast_root));
+
+            TextView tvToast = layout.findViewById(R.id.toast_text);
+            tvToast.setText("Welcome, Registration Success!");
+            Toast toast = new Toast(getApplicationContext());
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP,0,100);
+            toast.setView(layout);
+            toast.show();
         });
     }
-
-    private void showCustomToast() {
-
-        LinearLayout toastLayout =
-                new LinearLayout(this);
-
-        toastLayout.setOrientation(
-                LinearLayout.HORIZONTAL
-        );
-
-        toastLayout.setGravity(
-                Gravity.CENTER
-        );
-
-        toastLayout.setPadding(
-                40,
-                25,
-                40,
-                25
-        );
-
-        GradientDrawable background =
-                new GradientDrawable();
-
-        background.setColor(
-                Color.rgb(50, 50, 50)
-        );
-
-        background.setCornerRadius(25);
-
-        toastLayout.setBackground(background);
-
-        TextView toastMessage =
-                new TextView(this);
-
-        toastMessage.setText(
-                "Registration Confirmed"
-        );
-
-        toastMessage.setTextColor(
-                Color.WHITE
-        );
-
-        toastMessage.setTextSize(17);
-
-        toastMessage.setGravity(
-                Gravity.CENTER
-        );
-
-        toastMessage.setTypeface(
-                null,
-                Typeface.BOLD
-        );
-
-        toastLayout.addView(
-                toastMessage
-        );
-
-        Toast toast =
-                new Toast(
-                        getApplicationContext()
-                );
-
-        toast.setView(toastLayout);
-
-        toast.setDuration(
-                Toast.LENGTH_LONG
-        );
-
-        toast.setGravity(
-                Gravity.CENTER,
-                0,
-                0
-        );
-
-        toast.show();
-    }
-
 }
